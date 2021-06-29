@@ -218,12 +218,22 @@ public class MyUtils : MonoBehaviour
     /// </summary>
     public class CameraUtils
     {
+        private static Vector3 mousePos;
+        public static Vector3 MousePosition { get
+            {
+                if (mousePos == null)
+                    mousePos = GetMouseWorldPosition();
+                return mousePos;
+            }
+        }
         /// <summary>
         /// Returns the Vector3 World Scaled position of the mouse
         /// </summary>
         public static Vector3 GetMouseWorldPosition()
         {
-            return GetPosition(Input.mousePosition);
+            Vector3 output = GetPosition(Input.mousePosition);
+            mousePos = output;
+            return output;
         }
 
         /// <summary>
@@ -248,7 +258,9 @@ public class MyUtils : MonoBehaviour
 
         public static Vector3 GetPosition(Vector3 desiredPos, Camera givenCamera)
         {
+            
             return givenCamera.ScreenToWorldPoint(desiredPos);
+
         }
 
 
@@ -317,124 +329,6 @@ public class MyUtils : MonoBehaviour
         }
 
 
-
-    }
-
-
-    /// <summary>
-    /// A collection of classes which can be used for pooling
-    /// </summary>
-    public class Pooling
-    {
-        /// <summary>
-        /// Includes all 8 direction vectors
-        /// </summary>
-        public class PVector2
-        {
-            public static Vector2 zero = Vector2.zero;
-            public static Vector2 left = Vector2.left;
-            public static Vector2 right = Vector2.right;
-            public static Vector2 down = Vector2.down;
-            public static Vector2 up = Vector2.up;
-            /// <summary>
-            /// A Vector2 with the values of (-1, 1) 
-            /// </summary>
-            public static Vector2 topLeft2 = new Vector2(-1, 1);
-
-            /// <summary>
-            /// A Vector2 with the values of (1, 1) 
-            /// </summary>
-            public static Vector2 topRight2 = new Vector2(1, 1);
-
-            /// <summary>
-            /// A Vector2 with the values of (1, -1) 
-            /// </summary>
-            public static Vector2 bottomRight2 = new Vector2(1, -1);
-
-            /// <summary>
-            /// A Vector2 with the values of (-1, - 1) 
-            /// </summary>
-            public static Vector2 bottomLeft2 = new Vector2(-1, -1);
-
-            /// <summary>
-            /// A Vector2 with the values of normalized (-1, 1) 
-            /// </summary>
-            public static Vector2 topLeft = topLeft2.normalized;
-
-            /// <summary>
-            /// A Vector2 with the values of normalized (1, 1) 
-            /// </summary>
-            public static Vector2 topRight = topRight2.normalized;
-
-            /// <summary>
-            /// A Vector2 with the values of normalized (1, -1) 
-            /// </summary>
-            public static Vector2 bottomRight = bottomRight2.normalized;
-
-            /// <summary>
-            /// A Vector2 with the values of normalized (-1, -1) 
-            /// </summary>
-            public static Vector2 bottomLeft = bottomLeft2.normalized;
-
-
-            /// <summary>
-            /// Returns a referenced normalized vector inside this class relative to the input x and y values. Note: this method is only for directions.
-            /// </summary>
-            /// <param name="x">This value is only -1, 0 or 1. </param>
-            /// <param name="y">This value is only -1, 0 or 1. </param>
-            /// <returns>Reference vector inside this class</returns>
-            public static Vector2 GetVector(float x, float y)
-            {
-                // UP
-                if (x == 0 && y > 0) return up;
-                else if (x < 0 && y > 0) return topLeft;
-                else if (x > 0 && y > 0) return topRight;
-                //DOWN
-                if (x == 0 && y < 0) return down;
-                else if (x < 0 && y < 0) return bottomLeft;
-                else if (x > 0 && y < 0) return bottomRight;
-
-                //LEFT
-                if (y == 0 && x < 0) return left;
-                //RIGHT
-                if (y == 0 && x > 0) return right;
-
-                return zero;
-            }
-
-
-            /// <summary>
-            /// Returns a referenced unnormalized vector inside this class relative to the input x and y values
-            /// </summary>
-            /// <param name="x">This value is only -1, 0 or 1. </param>
-            /// <param name="y">This value is only -1, 0 or 1. </param>
-            /// <returns>Reference vector inside this class</returns>
-            public static Vector2 GetVectorUnnormalized(int x, int y)
-            {
-                // UP
-                if (x == 0 && y > 0) return up;
-                else if (x < 0 && y > 0) return topLeft2;
-                else if (x > 0 && y > 0) return topRight2;
-                //DOWN
-                if (x == 0 && y < 0) return down;
-                else if (x < 0 && y < 0) return bottomLeft2;
-                else if (x > 0 && y < 0) return bottomRight2;
-
-                //LEFT
-                if (y == 0 && x < 0) return left;
-                //RIGHT
-                if (y == 0 && x > 0) return right;
-
-                return zero;
-            }
-
-            public static Vector2 GetVectorUnnormalized(float x, float y)
-            {
-                return GetVectorUnnormalized((int)x, (int)y);
-            }
-
-
-        }
 
     }
 

@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 {
     // ----------------------------------------------------------- TOP -----------------------------------------------------------
 
-    private enum States { Idle, Walking, Attacking, InKnockack}
+    private enum States { Idle, Walking, Attacking, InKnockback}
 
     // ----------------------------------------------------------- TO SERIALIZED -----------------------------------------------------------
     //[SerializeField] private float MyMovementSpeed = 5f;
@@ -31,20 +31,17 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
     // ----------------------------------------------------------- Components -----------------------------------------------------------
     private Rigidbody2D myRigidbody;
-    private SpriteRenderer mySpriteRenderer;
     private CapsuleCollider2D myCollider;
     private Transform myMuzzlePos;
-    private Transform myFacingPos;
 
     // ----------------------------------------------------------- UNITY FUNCTIONS -----------------------------------------------------------
 
     void Start()
     {
+        Cursor.visible = false;
         myRigidbody = GetComponent<Rigidbody2D>();
-        mySpriteRenderer = GetComponent<SpriteRenderer>();
         myCollider = GetComponent<CapsuleCollider2D>();
         myMuzzlePos = transform.Find("Muzzle");
-        myFacingPos = transform.Find("Facing");
     }
 
     // Update is called once per frame
@@ -59,7 +56,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
     private void FixedUpdate()
     {
-        if(currentState != States.Attacking)
+        if(currentState != States.Attacking && currentState != States.InKnockback)
         {
             velocity = Vector2.Lerp(velocity, inputVector * myMobInfo.MovementSpeed, myMobInfo.MovementLerpWeight);
         }
@@ -101,14 +98,15 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
             case States.Attacking:
                 if (isAttacking < 0) return States.Idle;
                 return States.Attacking;
-            case States.InKnockack:
-                var dist = (((Vector2)transform.position) - knockbackEndpoint).sqrMagnitude;
+            case States.InKnockback:
+                var dist = (knockbackEndpoint - ((Vector2)transform.position)).sqrMagnitude;
                 if (dist <= 0.1f * 0.1f)
                 {
+                    if (isAttacking > 0) return States.Attacking;
                     knockbackEndpoint = Vector2.zero;
                     return States.Idle;
                 }
-                return States.InKnockack;
+                return States.InKnockback;
         }
     }
     
@@ -138,8 +136,8 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
                 }
 
                 break;
-            case States.InKnockack:
-                var half = (knockbackEndpoint - (Vector2)transform.position)/2f;
+            case States.InKnockback:
+                var half = (knockbackEndpoint - (Vector2)transform.position)/3f;
                 myRigidbody.MovePosition(transform.position + ((Vector3)half));
                 break;
 
@@ -152,22 +150,18 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         isAttacking = 0f;
         canAttack += Time.deltaTime;
         GameObject go = Pooler.Instance.Get("PlayerBullet");
-        //float yDiff = myMuzzlePos.position.y - transform.position.y;
-        //Vector2 truePos = new Vector2(myMuzzlePos.position.x, myMuzzlePos.position.y + yDiff);
-
-        //Vector2 dir = (truePos - (Vector2) transform.position).normalized;
-        Vector2 dir = (MyUtils.CameraUtils.GetMouseWorldPosition() - transform.position).normalized;
+        Vector2 dir = (MyUtils.CameraUtils.MousePosition - transform.position).normalized;
         go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir );
-        //GetKnockback(-1f * 0.5f * dir + (Vector2)transform.position);
+        GetKnockback((-0.3f * dir.normalized) + (Vector2)transform.position);
     }
 
     // ----------------------------------------------------------- INTERFACE FUNCTIONS -----------------------------------------------------------
 
     public void GetKnockback(Vector2 knockbackEndpoint)
     {
-        currentState = States.InKnockack;
+        currentState = States.InKnockback;
         var end = knockbackEndpoint;
-        var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+        var hit = Physics2D.CircleCast(transform.position, myCollider.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
         if (hit)
         {
             Vector2 directionToSelf = ((Vector2)transform.position - hit.point).normalized;
@@ -176,8 +170,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
             end.x = hit.point.x + (myCollider.bounds.extents.x * signX);
             end.y = hit.point.y + (myCollider.bounds.extents.y * signY);
         }
-        this.knockbackEndpoint = end * 1.3f;
-
+        this.knockbackEndpoint = end;
     }
 
 

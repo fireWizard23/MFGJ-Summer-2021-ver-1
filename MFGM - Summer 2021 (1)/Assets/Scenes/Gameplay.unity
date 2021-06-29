@@ -258,7 +258,7 @@ MonoBehaviour:
   AllPools:
   - tag: PlayerBullet
     prefab: {fileID: 230269792}
-    size: 1
+    size: 10
 --- !u!1 &991567195 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5844522758865407867, guid: a8d02cac3c41ad842848b478067c2194, type: 3}
@@ -411,7 +411,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991224779}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

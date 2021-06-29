@@ -16,8 +16,8 @@ MonoBehaviour:
   MovementSpeed: 5
   MovementLerpWeight: 0.15
   AttackDamage: 5
-  AttackCooldown: 0.1
-  AttackInteruptionDuration: 0.2
+  AttackCooldown: 0.5
+  AttackInteruptionDuration: 0.3
   knockbackLayerMask:
     serializedVersion: 2
     m_Bits: 256
