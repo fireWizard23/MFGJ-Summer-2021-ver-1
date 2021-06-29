@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - FriendlyBullet
   layers:
   - Default
   - TransparentFX
@@ -11,13 +12,13 @@ TagManager:
   - 
   - Water
   - UI
+  - Player
+  - Friend
+  - Enemy
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Friendly_Attack
+  - Hostile_Attack
   - 
   - 
   - 
