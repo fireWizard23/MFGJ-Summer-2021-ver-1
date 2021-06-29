@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MyClasses;
 
-public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
+public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 {
     // ----------------------------------------------------------- TOP -----------------------------------------------------------
 
@@ -21,27 +22,34 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
 
     // ----------------------------------------------------------- STATES FIELDS -----------------------------------------------------------
     private float isAttacking = -1f;
+    private float canAttack = 0;
 
+    private Vector2 knockbackEndpoint;
 
     // ----------------------------------------------------------- PUBLIC FIELDS -----------------------------------------------------------
     public Vector2 Velocity { get { return velocity; } }
 
     // ----------------------------------------------------------- Components -----------------------------------------------------------
     private Rigidbody2D myRigidbody;
+    private SpriteRenderer mySpriteRenderer;
     private Transform myMuzzlePos;
+    private Transform myFacingPos;
 
     // ----------------------------------------------------------- UNITY FUNCTIONS -----------------------------------------------------------
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
-        myMuzzlePos = transform.GetChild(0);
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
+        myMuzzlePos = transform.Find("Muzzle");
+        myFacingPos = transform.Find("Facing");
     }
 
     // Update is called once per frame
     void Update()
     {
         currentState = GetNewState();
+        //print(currentState);
         DoStateLogic();
     }
 
@@ -55,7 +63,7 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
         {
             velocity = Vector2.zero;
         }
-
+        if (Mathf.Abs(velocity.x) < 0.1f && Mathf.Abs(velocity.y) < 0.1f) velocity = Vector2.zero;
         myRigidbody.velocity = velocity;
     }
 
@@ -72,7 +80,7 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
 
     private States GetNewState()
     {
-        switch(currentState)
+        switch (currentState)
         {
             default:
             case States.Idle:
@@ -85,6 +93,14 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
             case States.Attacking:
                 if (isAttacking < 0) return States.Idle;
                 return States.Attacking;
+            case States.InKnockack:
+                var dist = (((Vector2)transform.position) - knockbackEndpoint).sqrMagnitude;
+                if (dist <= 0.1f * 0.1f)
+                {
+                    knockbackEndpoint = Vector2.zero;
+                    return States.Idle;
+                }
+                return States.InKnockack;
         }
     }
     
@@ -94,7 +110,12 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
         if(isAttacking >= 0f)
         {
             isAttacking += Time.deltaTime;
-            if (isAttacking >= myMobInfo.AttackCooldown) isAttacking = -1f;
+            if (isAttacking >= myMobInfo.AttackInteruptionDuration) isAttacking = -1f;
+        }
+        if(canAttack > 0f)
+        {
+            canAttack += Time.deltaTime;
+            if (canAttack >= myMobInfo.AttackCooldown) canAttack = 0f;
         }
 
         // MOVEMENT
@@ -103,10 +124,14 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
             case States.Idle:
             case States.Walking:
                 inputVector = GetInputVector();
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && canAttack == 0)
                 {
                     Shoot();
                 }
+                break;
+            case States.InKnockack:
+                var half = (knockbackEndpoint - (Vector2)transform.position)/2f;
+                myRigidbody.MovePosition(transform.position + ((Vector3)half));
                 break;
 
         }
@@ -116,10 +141,34 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
     {
         currentState = States.Attacking;
         isAttacking = 0f;
+        canAttack += Time.deltaTime;
         var go = Pooler.Instance.Get("PlayerBullet");
-        var dir = (myMuzzlePos.position - transform.position).normalized;
-        go.GetComponent<MyClasses.IProjectile>()?.Setup(myMuzzlePos.position, dir);
+        var dir = (myFacingPos.position - transform.position).normalized;
+        go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir);
+        GetKnockback(-1f * 0.5f * dir + transform.position);
     }
+
+    // ----------------------------------------------------------- INTERFACE FUNCTIONS -----------------------------------------------------------
+
+    public void GetKnockback(Vector2 knockbackEndpoint)
+    {
+        currentState = States.InKnockack;
+        var end = knockbackEndpoint;
+
+        var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+        if(hit)
+        {
+            Vector2 directionToSelf= ((Vector2)transform.position - hit.point).normalized;
+            float signX = Mathf.Sign(directionToSelf.x);
+            float signY = Mathf.Sign(directionToSelf.y);
+            end.x = hit.point.x + (mySpriteRenderer.bounds.extents.x * signX);
+            end.y = hit.point.y + (mySpriteRenderer.bounds.extents.y * signY);
+        }
+        this.knockbackEndpoint = end * 1.3f;
+
+    }
+
+
 
 
 }

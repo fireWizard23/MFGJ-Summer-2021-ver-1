@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - FriendlyBullet
+  - Muzzle
   layers:
   - Default
   - TransparentFX

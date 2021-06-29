@@ -19,5 +19,18 @@ public class MyClasses : MonoBehaviour
         public void PoolActivate(bool a);
     }
 
+    public interface IKnockbackeable
+    {
+        public void GetKnockback(Vector2 knockbackEndpoint);
+        
+    }
+
+    public interface IKnockbacker
+    {
+    }
+
+
+
+
 
 }

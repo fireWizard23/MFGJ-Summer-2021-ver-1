@@ -13,9 +13,9 @@ public class MobSO : ScriptableObject
 
     [Header("Attack"), Space]
     public float AttackDamage = 5f;
+    public float AttackCooldown = 1f;
     [Range(0f, 19.999f)]
-    public float AttackCooldown = 0.5f;
+    public float AttackInteruptionDuration = 0.5f;
 
-
-
+    [Space] public LayerMask knockbackLayerMask;
 }
