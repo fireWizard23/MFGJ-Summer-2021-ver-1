@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     // ----------------------------------------------------------- Components -----------------------------------------------------------
     private Rigidbody2D myRigidbody;
     private SpriteRenderer mySpriteRenderer;
+    private CapsuleCollider2D myCollider;
     private Transform myMuzzlePos;
     private Transform myFacingPos;
 
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+        myCollider = GetComponent<CapsuleCollider2D>();
         myMuzzlePos = transform.Find("Muzzle");
         myFacingPos = transform.Find("Facing");
     }
@@ -71,8 +73,12 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
     private Vector2 GetInputVector()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        float x = 0;
+        float y = 0;
+        if (Input.GetKey(KeyCode.A)) x = -1f;
+        else if (Input.GetKey(KeyCode.D)) x = 1;
+        if (Input.GetKey(KeyCode.S)) y = -1f;
+        if (Input.GetKey(KeyCode.W)) y = 1f;
 
         return MyUtils.Pooling.PVector2.GetVector(x, y);
 
@@ -124,10 +130,18 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
             case States.Idle:
             case States.Walking:
                 inputVector = GetInputVector();
-                if (Input.GetKeyDown(KeyCode.Space) && canAttack == 0)
+                if(canAttack == 0)
                 {
-                    Shoot();
+                    if (Input.GetKey(KeyCode.LeftArrow) )
+                        Shoot(Vector2.left);
+                    else if (Input.GetKey(KeyCode.RightArrow))
+                        Shoot(Vector2.right);
+                    else if (Input.GetKey(KeyCode.UpArrow))
+                        Shoot(Vector2.up);
+                    else if (Input.GetKey(KeyCode.DownArrow))
+                        Shoot(Vector2.down);
                 }
+
                 break;
             case States.InKnockack:
                 var half = (knockbackEndpoint - (Vector2)transform.position)/2f;
@@ -137,15 +151,18 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         }
     }
 
-    private void Shoot()
+    private void Shoot(Vector2 direction)
     {
         currentState = States.Attacking;
         isAttacking = 0f;
         canAttack += Time.deltaTime;
-        var go = Pooler.Instance.Get("PlayerBullet");
-        var dir = (myFacingPos.position - transform.position).normalized;
-        go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir);
-        GetKnockback(-1f * 0.5f * dir + transform.position);
+        GameObject go = Pooler.Instance.Get("PlayerBullet");
+        //float yDiff = myMuzzlePos.position.y - transform.position.y;
+        //Vector2 truePos = new Vector2(myMuzzlePos.position.x, myMuzzlePos.position.y + yDiff);
+
+        //Vector2 dir = (truePos - (Vector2) transform.position).normalized;
+        go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, direction);
+        //GetKnockback(-1f * 0.5f * dir + (Vector2)transform.position);
     }
 
     // ----------------------------------------------------------- INTERFACE FUNCTIONS -----------------------------------------------------------
@@ -154,16 +171,16 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         currentState = States.InKnockack;
         var end = knockbackEndpoint;
-
-        //var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
-        //if(hit)
-        //{
-        //    Vector2 directionToSelf= ((Vector2)transform.position - hit.point).normalized;
-        //    float signX = Mathf.Sign(directionToSelf.x);
-        //    float signY = Mathf.Sign(directionToSelf.y);
-        //    end.x = hit.point.x + (mySpriteRenderer.bounds.extents.x * signX);
-        //    end.y = hit.point.y + (mySpriteRenderer.bounds.extents.y * signY);
-        //}
+        var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+        if (hit)
+        {
+            print(hit.collider.name);
+            Vector2 directionToSelf = ((Vector2)transform.position - hit.point).normalized;
+            float signX = Mathf.Sign(directionToSelf.x);
+            float signY = Mathf.Sign(directionToSelf.y);
+            end.x = hit.point.x + (myCollider.bounds.extents.x * signX);
+            end.y = hit.point.y + (myCollider.bounds.extents.y * signY);
+        }
         this.knockbackEndpoint = end * 1.3f;
 
     }
