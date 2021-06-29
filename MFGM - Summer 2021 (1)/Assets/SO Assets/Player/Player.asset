@@ -16,4 +16,4 @@ MonoBehaviour:
   MovementSpeed: 5
   MovementLerpWeight: 0.15
   AttackDamage: 5
-  AttackCooldown: 2
+  AttackCooldown: 0.5

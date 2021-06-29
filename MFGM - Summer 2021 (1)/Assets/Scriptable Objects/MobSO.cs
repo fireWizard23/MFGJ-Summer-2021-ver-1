@@ -13,7 +13,8 @@ public class MobSO : ScriptableObject
 
     [Header("Attack"), Space]
     public float AttackDamage = 5f;
-    public float AttackCooldown = 2f;
+    [Range(0f, 19.999f)]
+    public float AttackCooldown = 0.5f;
 
 
 

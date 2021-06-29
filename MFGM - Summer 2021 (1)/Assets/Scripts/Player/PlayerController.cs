@@ -17,35 +17,45 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
 
     private Vector2 inputVector = Vector2.zero;
     private Vector2 velocity = Vector2.zero;
+    private States currentState = States.Idle;
+
+    // ----------------------------------------------------------- STATES FIELDS -----------------------------------------------------------
+    private float isAttacking = -1f;
+
 
     // ----------------------------------------------------------- PUBLIC FIELDS -----------------------------------------------------------
     public Vector2 Velocity { get { return velocity; } }
 
     // ----------------------------------------------------------- Components -----------------------------------------------------------
     private Rigidbody2D myRigidbody;
-
+    private Transform myMuzzlePos;
 
     // ----------------------------------------------------------- UNITY FUNCTIONS -----------------------------------------------------------
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        myMuzzlePos = transform.GetChild(0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        inputVector = GetInputVector();
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            var go = Pooler.Instance.Get("PlayerBullet");
-            go.GetComponent<MyClasses.IProjectile>()?.Setup(transform.position, Vector2.right);
-        }
+        currentState = GetNewState();
+        DoStateLogic();
     }
 
     private void FixedUpdate()
     {
-        velocity = Vector2.Lerp(velocity, inputVector * myMobInfo.MovementSpeed, myMobInfo.MovementLerpWeight);
+        if(currentState != States.Attacking)
+        {
+            velocity = Vector2.Lerp(velocity, inputVector * myMobInfo.MovementSpeed, myMobInfo.MovementLerpWeight);
+        }
+        else
+        {
+            velocity = Vector2.zero;
+        }
+
         myRigidbody.velocity = velocity;
     }
 
@@ -60,7 +70,56 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
 
     }
 
+    private States GetNewState()
+    {
+        switch(currentState)
+        {
+            default:
+            case States.Idle:
+                if (velocity != Vector2.zero)
+                    return States.Walking;
+                return States.Idle;
+            case States.Walking:
+                if (velocity == Vector2.zero) return States.Idle;
+                return States.Walking;
+            case States.Attacking:
+                if (isAttacking < 0) return States.Idle;
+                return States.Attacking;
+        }
+    }
+    
+    private void DoStateLogic()
+    {
+        // Is Attacking Logic
+        if(isAttacking >= 0f)
+        {
+            isAttacking += Time.deltaTime;
+            if (isAttacking >= myMobInfo.AttackCooldown) isAttacking = -1f;
+        }
 
+        // MOVEMENT
+        switch(currentState)
+        {
+            case States.Idle:
+            case States.Walking:
+                inputVector = GetInputVector();
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Shoot();
+                }
+                break;
+
+        }
+    }
+
+    private void Shoot()
+    {
+        currentState = States.Attacking;
+        isAttacking = 0f;
+        var go = Pooler.Instance.Get("PlayerBullet");
+        var dir = (myMuzzlePos.position - transform.position).normalized;
+        go.GetComponent<MyClasses.IProjectile>()?.Setup(myMuzzlePos.position, dir);
+    }
 
 
 }
