@@ -19,6 +19,7 @@ public class VelocityRotator : MonoBehaviour
 
     void FixedUpdate()
     {
+        print(toRotate.Velocity == Vector2.zero);
         if (toRotate != null && toRotate.Velocity != Vector2.zero)
         {
             Vector2 v = toRotate.Velocity;

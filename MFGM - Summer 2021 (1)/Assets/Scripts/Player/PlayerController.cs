@@ -155,15 +155,15 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         currentState = States.InKnockack;
         var end = knockbackEndpoint;
 
-        var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
-        if(hit)
-        {
-            Vector2 directionToSelf= ((Vector2)transform.position - hit.point).normalized;
-            float signX = Mathf.Sign(directionToSelf.x);
-            float signY = Mathf.Sign(directionToSelf.y);
-            end.x = hit.point.x + (mySpriteRenderer.bounds.extents.x * signX);
-            end.y = hit.point.y + (mySpriteRenderer.bounds.extents.y * signY);
-        }
+        //var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+        //if(hit)
+        //{
+        //    Vector2 directionToSelf= ((Vector2)transform.position - hit.point).normalized;
+        //    float signX = Mathf.Sign(directionToSelf.x);
+        //    float signY = Mathf.Sign(directionToSelf.y);
+        //    end.x = hit.point.x + (mySpriteRenderer.bounds.extents.x * signX);
+        //    end.y = hit.point.y + (mySpriteRenderer.bounds.extents.y * signY);
+        //}
         this.knockbackEndpoint = end * 1.3f;
 
     }
