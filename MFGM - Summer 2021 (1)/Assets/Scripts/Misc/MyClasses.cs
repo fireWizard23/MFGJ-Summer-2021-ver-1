@@ -8,4 +8,11 @@ public class MyClasses : MonoBehaviour
     {
         public Vector2 Velocity { get; }
     }
+
+    public interface IProjectile
+    {
+        public void Setup(Vector2 position, Vector2 direction);
+    }
+
+
 }

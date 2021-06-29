@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
     // ----------------------------------------------------------- TO SERIALIZED -----------------------------------------------------------
     //[SerializeField] private float MyMovementSpeed = 5f;
     [SerializeField] private MobSO myMobInfo;
+    public GameObject myBullet;
 
     // ----------------------------------------------------------- PRIVATE FIELDS -----------------------------------------------------------
 
@@ -35,6 +36,13 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
     void Update()
     {
         inputVector = GetInputVector();
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            var newBullet = Instantiate(myBullet);
+            var proj  =newBullet.GetComponent<MyClasses.IProjectile>();
+            proj.Setup(transform.position, Vector2.right);
+
+        }
     }
 
     private void FixedUpdate()
