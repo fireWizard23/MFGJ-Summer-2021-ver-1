@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
+public abstract class Projectile : MonoBehaviour
 {
     //// Start is called before the first frame update
     //void Start()
@@ -21,7 +21,7 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
 
     protected virtual void Update()
     {
-        Move();
+        
     }
 
     protected Vector2 direction = Vector2.zero;
@@ -31,18 +31,16 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
     {
         transform.position = spawnPos;
         this.direction = direction;
-        print("BASE SETUP CALLED");
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        print("COLLISION HAPPEND!");
         Destroy(gameObject);
     }
 
     protected virtual void Move()
     {
-        myRigidbody.velocity = (direction * myProjectileInfo.MoveSpeed);
+        myRigidbody.AddForce(direction * myProjectileInfo.MoveSpeed);
     }
 
 
