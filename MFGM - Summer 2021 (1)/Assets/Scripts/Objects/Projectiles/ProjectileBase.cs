@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
+public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile, MyClasses.IPoolActivatable
 {
 
     public ProjectileSO myProjectileInfo;
@@ -26,11 +26,14 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
     {
         transform.position = spawnPos;
         this.direction = direction;
+        MyUtils.Time.SetTimeout(() => {
+            if (gameObject.activeInHierarchy) DestroySelf();
+        }, myProjectileInfo.LifeTime, this);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject);
+        DestroySelf();
     }
 
     protected virtual void Move()
@@ -38,7 +41,13 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
         myRigidbody.velocity = (direction * myProjectileInfo.MoveSpeed);
     }
 
+    private void DestroySelf()
+    {
+        gameObject.SetActive(false);
+    }
 
-
-
+    public void PoolActivate(bool a)
+    {
+        gameObject.SetActive(a);
+    }
 }

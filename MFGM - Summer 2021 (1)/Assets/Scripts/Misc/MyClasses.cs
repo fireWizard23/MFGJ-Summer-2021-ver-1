@@ -14,6 +14,10 @@ public class MyClasses : MonoBehaviour
         public void Setup(Vector2 spawnPos, Vector2 direction);
     }
 
+    public interface IPoolActivatable
+    {
+        public void PoolActivate(bool a);
+    }
 
 
 }

@@ -38,8 +38,8 @@ public class PlayerController : MonoBehaviour, MyClasses.IVelocityRotated
         inputVector = GetInputVector();
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            var go = Instantiate(myBullet);
-            go.GetComponent<MyClasses.IProjectile>().Setup(transform.position, Vector2.right);
+            var go = Pooler.Instance.Get("PlayerBullet");
+            go.GetComponent<MyClasses.IProjectile>()?.Setup(transform.position, Vector2.right);
         }
     }
 
