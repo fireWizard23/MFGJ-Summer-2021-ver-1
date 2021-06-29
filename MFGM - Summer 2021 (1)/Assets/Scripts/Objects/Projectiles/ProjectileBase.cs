@@ -2,13 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Projectile : MonoBehaviour
+public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile
 {
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
 
     public ProjectileSO myProjectileInfo;
 
@@ -21,7 +16,7 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Update()
     {
-        
+        Move();
     }
 
     protected Vector2 direction = Vector2.zero;
@@ -40,7 +35,7 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void Move()
     {
-        myRigidbody.AddForce(direction * myProjectileInfo.MoveSpeed);
+        myRigidbody.velocity = (direction * myProjectileInfo.MoveSpeed);
     }
 
 
