@@ -25,7 +25,7 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile, MyC
     public virtual void Setup(Vector2 spawnPos, Vector2 direction)
     {
         transform.position = spawnPos;
-        this.direction = direction;
+        this.direction = direction.normalized;
         MyUtils.Time.SetTimeout(() => {
             if (gameObject.activeInHierarchy) DestroySelf();
         }, myProjectileInfo.LifeTime, this);

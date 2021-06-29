@@ -51,8 +51,10 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     void Update()
     {
         currentState = GetNewState();
-        //print(currentState);
         DoStateLogic();
+
+
+
     }
 
     private void FixedUpdate()
@@ -71,7 +73,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
     // ----------------------------------------------------------- MY FUNCTIONS -----------------------------------------------------------
 
-    private Vector2 GetInputVector()
+        private Vector2 GetInputVector()
     {
         float x = 0;
         float y = 0;
@@ -80,7 +82,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         if (Input.GetKey(KeyCode.S)) y = -1f;
         if (Input.GetKey(KeyCode.W)) y = 1f;
 
-        return MyUtils.Pooling.PVector2.GetVector(x, y);
+        return new Vector2(x, y);
 
     }
 
@@ -130,16 +132,9 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
             case States.Idle:
             case States.Walking:
                 inputVector = GetInputVector();
-                if(canAttack == 0)
+                if(Input.GetMouseButton(0) && canAttack == 0)
                 {
-                    if (Input.GetKey(KeyCode.LeftArrow) )
-                        Shoot(Vector2.left);
-                    else if (Input.GetKey(KeyCode.RightArrow))
-                        Shoot(Vector2.right);
-                    else if (Input.GetKey(KeyCode.UpArrow))
-                        Shoot(Vector2.up);
-                    else if (Input.GetKey(KeyCode.DownArrow))
-                        Shoot(Vector2.down);
+                    Shoot();
                 }
 
                 break;
@@ -151,7 +146,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         }
     }
 
-    private void Shoot(Vector2 direction)
+    private void Shoot()
     {
         currentState = States.Attacking;
         isAttacking = 0f;
@@ -161,7 +156,8 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         //Vector2 truePos = new Vector2(myMuzzlePos.position.x, myMuzzlePos.position.y + yDiff);
 
         //Vector2 dir = (truePos - (Vector2) transform.position).normalized;
-        go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, direction);
+        Vector2 dir = (MyUtils.CameraUtils.GetMouseWorldPosition() - transform.position).normalized;
+        go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir );
         //GetKnockback(-1f * 0.5f * dir + (Vector2)transform.position);
     }
 
@@ -174,7 +170,6 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         var hit = Physics2D.CircleCast(transform.position, mySpriteRenderer.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
         if (hit)
         {
-            print(hit.collider.name);
             Vector2 directionToSelf = ((Vector2)transform.position - hit.point).normalized;
             float signX = Mathf.Sign(directionToSelf.x);
             float signY = Mathf.Sign(directionToSelf.y);
