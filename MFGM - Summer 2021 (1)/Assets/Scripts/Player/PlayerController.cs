@@ -49,10 +49,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         currentState = GetNewState();
         DoStateLogic();
-        if(currentState == States.InKnockback)
-        {
-            MyUtils.Print(currentState, knockbackEndpoint, transform.position);
-        }
+        //MyUtils.Print(currentState, myRigidbody.velocity, myRigidbody.velocity == Vector2.zero);
     }
 
     private void FixedUpdate()
@@ -60,24 +57,26 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         if(currentState != States.Attacking && currentState != States.InKnockback)
         {
             velocity = Vector2.Lerp(velocity, inputVector * myMobInfo.MovementSpeed, myMobInfo.MovementLerpWeight);
+            myRigidbody.velocity = velocity;
         }
-        else
+        else if(currentState != States.InKnockback)
         {
             velocity = Vector2.zero;
+            myRigidbody.velocity = velocity;
+
         }
-        if (Mathf.Abs(velocity.x) < 0.1f && Mathf.Abs(velocity.y) < 0.1f) velocity = Vector2.zero;
-        myRigidbody.velocity = velocity;
+        if (Mathf.Abs(myRigidbody.velocity.x) < 0.1f && Mathf.Abs(myRigidbody.velocity.y) < 0.1f) myRigidbody.velocity = Vector2.zero;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(currentState == States.InKnockback)
-        {
-            print("LKDSflkas");
-            knockbackEndpoint = transform.position;
-            currentState = States.Idle;
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if(currentState == States.InKnockback)
+    //    {
+    //        print("LKDSflkas");
+    //        knockbackEndpoint = transform.position;
+    //        currentState = States.Idle;
+    //    }
+    //}
 
     // ----------------------------------------------------------- MY FUNCTIONS -----------------------------------------------------------
 
@@ -113,7 +112,8 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
                 return States.Attacking;
             case States.InKnockback:
                 var dist = (knockbackEndpoint - ((Vector2)transform.position)).sqrMagnitude;
-                if (dist <= 0.1f * 0.1f)
+                if(myRigidbody.velocity == Vector2.zero)
+                //if (dist <= 0.1f * 0.1f)
                 {
                     if (isAttacking > 0) return States.Attacking;
                     knockbackEndpoint = Vector2.zero;
@@ -150,8 +150,8 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
                 break;
             case States.InKnockback:
-                var half = (knockbackEndpoint - (Vector2)transform.position)/3f;
-                myRigidbody.MovePosition(transform.position + (Vector3)half);
+                //var half = (knockbackEndpoint - (Vector2)transform.position) / 3f;
+                //myRigidbody.MovePosition(transform.position + (Vector3)half);
                 break;
 
         }
@@ -165,26 +165,21 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         GameObject go = Pooler.Instance.Get("PlayerBullet");
         Vector2 dir = ((Vector2)(MyUtils.CameraUtils.MousePosition - transform.position)).normalized;
         go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir );
-        GetKnockback((-0.5f * dir) + (Vector2)transform.position);
+        GetKnockback(-dir, 0.5f);
     }
 
     // ----------------------------------------------------------- INTERFACE FUNCTIONS -----------------------------------------------------------
 
-    public void GetKnockback(Vector2 knockbackEndpoint)
+    public void GetKnockback(Vector2 dir, float scale,float duration=0.1f)
     {
+        duration = Mathf.Clamp(duration, 0, 1);
+        scale = Mathf.Clamp(scale, 0, 5);
         currentState = States.InKnockback;
-        var end = knockbackEndpoint;
 
-        //var hit = Physics2D.CircleCast(knockbackEndpoint, myCollider.bounds.extents.magnitude,
-        //            Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
-        //if(hit.collider != null)
-        //{
-        //    Debug.DrawLine(hit.rigidbody.position, hit.normal, Color.white, 100f);
-        //    Debug.DrawLine(transform.position, end, Color.red, 100f);
-        //    print(Vector2.Dot(hit.normal.normalized, end.normalized));
-        //}
-
-        this.knockbackEndpoint = end;
+        myRigidbody.AddForce(dir.normalized * scale * 10f, ForceMode2D.Impulse);
+        MyUtils.Time.SetTimeout(() => {
+            myRigidbody.velocity = Vector2.zero;
+        }, duration, this);
 
     }
 

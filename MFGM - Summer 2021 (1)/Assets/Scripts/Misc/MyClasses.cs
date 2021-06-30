@@ -21,7 +21,7 @@ public class MyClasses : MonoBehaviour
 
     public interface IKnockbackeable
     {
-        public void GetKnockback(Vector2 knockbackEndpoint);
+        public void GetKnockback(Vector2 direction, float length, float duration);
         
     }
 
