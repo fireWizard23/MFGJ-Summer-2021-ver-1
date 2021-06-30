@@ -222,8 +222,9 @@ GameObject:
   m_Component:
   - component: {fileID: 906999453}
   - component: {fileID: 906999454}
+  - component: {fileID: 906999455}
   m_Layer: 0
-  m_Name: Pooler
+  m_Name: Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -259,6 +260,19 @@ MonoBehaviour:
   - tag: PlayerBullet
     prefab: {fileID: 230269792}
     size: 10
+--- !u!114 &906999455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906999452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 275d8833ef6bcdb4c9353372927bc7ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hideMouse: 0
 --- !u!1 &991567195 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5844522758865407867, guid: a8d02cac3c41ad842848b478067c2194, type: 3}
@@ -336,7 +350,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6875, y: 0.8958333}
+  m_Size: {x: 2.0327425, y: 1.8035245}
   m_EdgeRadius: 0
 --- !u!212 &1991224781
 SpriteRenderer:
