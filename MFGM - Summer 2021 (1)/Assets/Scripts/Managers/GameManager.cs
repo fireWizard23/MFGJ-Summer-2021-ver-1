@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     }
 
     public bool hideMouse = false;
+    public bool confineMouse = false;
 
 
     void Start()
@@ -35,7 +36,15 @@ public class GameManager : MonoBehaviour
         {
             Cursor.visible = true;
         }
-        if(Input.GetKeyDown(KeyCode.R))
+        if (confineMouse)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        } else if(Cursor.lockState != CursorLockMode.None)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene("Gameplay");
         }

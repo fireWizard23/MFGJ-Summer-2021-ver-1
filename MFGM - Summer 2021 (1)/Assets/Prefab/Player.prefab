@@ -42,7 +42,8 @@ GameObject:
   - component: {fileID: 5844522758865407860}
   - component: {fileID: 5844522758865407862}
   - component: {fileID: 5844522758865407863}
-  - component: {fileID: 5844522758865407856}
+  - component: {fileID: 991567196}
+  - component: {fileID: 991567197}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -59,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 5844522758865407867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.558508, y: 1.4350188, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 1, z: 1}
   m_Children:
   - {fileID: 9112176465859504630}
   - {fileID: 3847669368998413504}
@@ -130,14 +131,14 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 0.1
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!114 &5844522758865407863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +153,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myMobInfo: {fileID: 11400000, guid: b1f77742e79a1cd44b7dc911f345e6d0, type: 2}
   myBullet: {fileID: 0}
---- !u!114 &5844522758865407856
+--- !u!70 &991567196
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5844522758865407867}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0048635304, y: 0.013934613}
+  m_Size: {x: 0.45299184, y: 0.889711}
+  m_Direction: 0
+--- !u!114 &991567197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,11 +178,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5844522758865407867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 467b99f6f81c7e44e8da71282a425471, type: 3}
+  m_Script: {fileID: 11500000, guid: 124bcecbeb148eb46aaf60b7f260c408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RotSpeed: 5
-  AngleOffset: 0
+  LerpWeight: 0.309
 --- !u!1 &9013543833240888402
 GameObject:
   m_ObjectHideFlags: 0
