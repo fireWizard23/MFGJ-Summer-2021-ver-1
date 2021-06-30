@@ -155,6 +155,13 @@ public class MyUtils : MonoBehaviour
             );
         }
 
+        public static Vector2 Sign(Vector2 input)
+        {
+            float x = Mathf.Sign(input.x);
+            float y = Mathf.Sign(input.y);
+            return new Vector2(x, y);
+        }
+
         // ================================================= VECTOR 3 =================================================
 
         /// <summary>

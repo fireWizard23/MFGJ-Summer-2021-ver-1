@@ -140,6 +140,14 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
                 break;
             case States.InKnockback:
                 var half = (knockbackEndpoint - (Vector2)transform.position)/3f;
+                var hit = Physics2D.CircleCast(transform.position + (Vector3)half, myCollider.bounds.extents.magnitude, 
+                    Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+                if (hit.collider != null)
+                {
+                    currentState = States.Idle;
+                    knockbackEndpoint = hit.point;
+                    return;
+                }
                 myRigidbody.MovePosition(transform.position + ((Vector3)half));
                 break;
 
@@ -154,7 +162,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         GameObject go = Pooler.Instance.Get("PlayerBullet");
         Vector2 dir = ((Vector2)(MyUtils.CameraUtils.MousePosition - transform.position)).normalized;
         go.GetComponent<IProjectile>()?.Setup(myMuzzlePos.position, dir );
-        GetKnockback((-1f * dir) + (Vector2)transform.position);
+        GetKnockback((-0.5f * dir) + (Vector2)transform.position);
     }
 
     // ----------------------------------------------------------- INTERFACE FUNCTIONS -----------------------------------------------------------
@@ -163,15 +171,6 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         currentState = States.InKnockback;
         var end = knockbackEndpoint;
-        //var hit = Physics2D.CircleCast(transform.position, myCollider.bounds.extents.x, Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
-        //if (hit)
-        //{
-        //    Vector2 directionToSelf = ((Vector2)transform.position - hit.point).normalized;
-        //    float signX = Mathf.Sign(directionToSelf.x);
-        //    float signY = Mathf.Sign(directionToSelf.y);
-        //    end.x = hit.point.x + (myCollider.bounds.extents.x * signX);
-        //    end.y = hit.point.y + (myCollider.bounds.extents.y * signY);
-        //}
         this.knockbackEndpoint = end;
     }
 
