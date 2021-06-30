@@ -49,9 +49,10 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         currentState = GetNewState();
         DoStateLogic();
-
-
-
+        if(currentState == States.InKnockback)
+        {
+            MyUtils.Print(currentState, knockbackEndpoint, transform.position);
+        }
     }
 
     private void FixedUpdate()
@@ -66,6 +67,16 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         }
         if (Mathf.Abs(velocity.x) < 0.1f && Mathf.Abs(velocity.y) < 0.1f) velocity = Vector2.zero;
         myRigidbody.velocity = velocity;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(currentState == States.InKnockback)
+        {
+            print("LKDSflkas");
+            knockbackEndpoint = transform.position;
+            currentState = States.Idle;
+        }
     }
 
     // ----------------------------------------------------------- MY FUNCTIONS -----------------------------------------------------------
@@ -140,15 +151,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
                 break;
             case States.InKnockback:
                 var half = (knockbackEndpoint - (Vector2)transform.position)/3f;
-                var hit = Physics2D.CircleCast(transform.position + (Vector3)half, myCollider.bounds.extents.magnitude, 
-                    Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
-                if (hit.collider != null)
-                {
-                    currentState = States.Idle;
-                    knockbackEndpoint = hit.point;
-                    return;
-                }
-                myRigidbody.MovePosition(transform.position + ((Vector3)half));
+                myRigidbody.MovePosition(transform.position + (Vector3)half);
                 break;
 
         }
@@ -171,7 +174,18 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
     {
         currentState = States.InKnockback;
         var end = knockbackEndpoint;
+
+        //var hit = Physics2D.CircleCast(knockbackEndpoint, myCollider.bounds.extents.magnitude,
+        //            Vector3.forward, 1f, myMobInfo.knockbackLayerMask);
+        //if(hit.collider != null)
+        //{
+        //    Debug.DrawLine(hit.rigidbody.position, hit.normal, Color.white, 100f);
+        //    Debug.DrawLine(transform.position, end, Color.red, 100f);
+        //    print(Vector2.Dot(hit.normal.normalized, end.normalized));
+        //}
+
         this.knockbackEndpoint = end;
+
     }
 
 
