@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
 
     // ----------------------------------------------------------- MY FUNCTIONS -----------------------------------------------------------
 
-        private Vector2 GetInputVector()
+    private Vector2 GetInputVector()
     {
         float x = 0;
         float y = 0;
@@ -79,7 +79,9 @@ public class PlayerController : MonoBehaviour, IVelocityRotated, IKnockbackeable
         if (Input.GetKey(KeyCode.S)) y = -1f;
         if (Input.GetKey(KeyCode.W)) y = 1f;
 
-        return new Vector2(x, y);
+        Vector2 output = new Vector2(x, y);
+        if (x != 0 && y != 0) output.Normalize();
+        return output;
 
     }
 
