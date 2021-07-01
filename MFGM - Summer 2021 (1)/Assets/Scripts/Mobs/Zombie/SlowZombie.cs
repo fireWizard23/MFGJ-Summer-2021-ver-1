@@ -6,13 +6,21 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
 {
     public enum States { Idle, Walking, Attacking, InKnockback}
 
-
+    
     private States currentState = States.Idle;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+        if(noticeComponent != null)
+            noticeComponent.OnMobEnterRadius += OnMobEnter ;
+    }
+
+    private void OnDestroy()
+    {
+        if (noticeComponent != null)
+            noticeComponent.OnMobEnterRadius -= OnMobEnter;
     }
 
     // Update is called once per frame
@@ -21,8 +29,6 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
         currentState = GetNewStates();
         DoStateLogic();
     }
-
-    
 
     private States GetNewStates()
     {
@@ -59,7 +65,14 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
         }
     }
 
+    private void OnMobEnter(GameObject mob)
+    {
+        if (followTargetComponent.target == null)
+        {
+            followTargetComponent.target = mob.transform;
+        }
 
+    }
 
 
     public void GetKnockback(Vector2 direction, float length, float duration)

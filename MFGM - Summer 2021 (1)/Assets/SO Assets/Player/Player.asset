@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   GivenHealth: 100
-  MovementSpeed: 5
+  MovementSpeed: 3
   MovementLerpWeight: 0.15
   AttackDamage: 5
   AttackCooldown: 0.5

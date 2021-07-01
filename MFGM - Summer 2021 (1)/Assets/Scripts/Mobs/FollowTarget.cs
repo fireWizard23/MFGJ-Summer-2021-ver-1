@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class FollowTarget : MonoBehaviour
 {
+    [HideInInspector]
     public Transform target;
 
     public NPC_SO myInfo;
@@ -26,19 +27,38 @@ public class FollowTarget : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        myAgent.SetDestination(target.position);
+        if(target != null)
+        {
+            myAgent.SetDestination(target.position);
 
-        Vector2 targetPos = target.position - transform.position;
-        bool inDistance = targetPos.sqrMagnitude > myInfo.StopDistance * myInfo.StopDistance;
-        if (inDistance)
-        {
-            myRigidbody.velocity = myAgent.desiredVelocity.normalized;
-            myAgent.nextPosition = myRigidbody.position;
+            Vector2 targetPos = target.position - transform.position;
+            float distance = targetPos.sqrMagnitude;
+            if(distance > myInfo.NoticeRadius * myInfo.NoticeRadius)
+            {
+                target = null;
+                return;
+            }
+
+            if (distance > myInfo.StopDistance * myInfo.StopDistance)
+            {
+                myRigidbody.velocity = Vector2.Lerp(myRigidbody.velocity, 
+                    myAgent.desiredVelocity.normalized * myInfo.MovementSpeed,
+                    myInfo.MovementLerpWeight);
+
+                myAgent.nextPosition = myRigidbody.position;
+            }
+            else
+            {
+                myRigidbody.velocity = Vector2.zero;
+            }
         }
-        else  
+        else
         {
-            myRigidbody.velocity = Vector2.zero;
+            myRigidbody.velocity = Vector2.Lerp(myRigidbody.velocity, Vector2.zero, myInfo.MovementLerpWeight);
         }
+
+
+
     }
 
 

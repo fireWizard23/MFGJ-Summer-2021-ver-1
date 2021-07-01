@@ -168,22 +168,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TrackedObjectOffset: {x: 0, y: 0, z: 0}
-  m_LookaheadTime: 0
+  m_LookaheadTime: 0.1
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 1
-  m_YDamping: 1
+  m_XDamping: 2
+  m_YDamping: 2
   m_ZDamping: 0
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.4990741
   m_CameraDistance: 10
   m_DeadZoneWidth: 0.4
-  m_DeadZoneHeight: 0.4
+  m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.8
-  m_SoftZoneHeight: 2
+  m_SoftZoneHeight: 0.8
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
@@ -327,7 +327,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.7300005, y: -0.1692585, z: -10}
+  m_LocalPosition: {x: -1.7300005, y: -0.16925898, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 906999453}
@@ -394,7 +394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 628213338}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.7300005, y: -0.1692585, z: -10}
+  m_LocalPosition: {x: -1.7300005, y: -0.16925898, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 123442941}
@@ -464,7 +464,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &906999452
 GameObject:
@@ -571,7 +571,7 @@ Transform:
   - {fileID: 2071334127}
   - {fileID: 1501189654}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1084238720
 GameObject:
@@ -589,13 +589,14 @@ GameObject:
   - component: {fileID: 1084238723}
   - component: {fileID: 1084238722}
   - component: {fileID: 1084238721}
+  - component: {fileID: 1084238729}
   m_Layer: 8
   m_Name: BasicZombie (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &1084238721
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -657,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b715c9f49c9aeeb44a11d15afed58a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 502888243}
+  target: {fileID: 0}
   myInfo: {fileID: 11400000, guid: 60f338746ccecd049bd635cfe6afc72a, type: 2}
 --- !u!70 &1084238725
 CapsuleCollider2D:
@@ -687,7 +688,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -761,6 +762,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1084238729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084238720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a9acd3cf4094541878786dbbbd3431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myInfo: {fileID: 11400000, guid: 60f338746ccecd049bd635cfe6afc72a, type: 2}
 --- !u!1 &1227544141
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +791,7 @@ GameObject:
   - component: {fileID: 1227544144}
   - component: {fileID: 1227544143}
   - component: {fileID: 1227544142}
+  - component: {fileID: 1227544150}
   m_Layer: 8
   m_Name: BasicZombie (2)
   m_TagString: Untagged
@@ -845,7 +860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b715c9f49c9aeeb44a11d15afed58a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 502888243}
+  target: {fileID: 0}
   myInfo: {fileID: 11400000, guid: 60f338746ccecd049bd635cfe6afc72a, type: 2}
 --- !u!70 &1227544146
 CapsuleCollider2D:
@@ -875,7 +890,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -949,6 +964,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1227544150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227544141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a9acd3cf4094541878786dbbbd3431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myInfo: {fileID: 11400000, guid: 60f338746ccecd049bd635cfe6afc72a, type: 2}
 --- !u!1 &1346743849
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,7 +999,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!70 &1346743850
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1000,7 +1028,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -1072,7 +1100,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1346743854
 MonoBehaviour:

@@ -11,13 +11,14 @@ public abstract class MobBase : MonoBehaviour, IVelocityRotated
     protected Rigidbody2D myRigidbody;
     protected FollowTarget followTargetComponent;
     protected VelocityRotator velocityRotator;
-    
+    protected NoticeComponent noticeComponent;
 
     protected virtual void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         followTargetComponent = GetComponent<FollowTarget>();
         velocityRotator = GetComponent<VelocityRotator>();
+        noticeComponent = GetComponent<NoticeComponent>();
     }
 
 
