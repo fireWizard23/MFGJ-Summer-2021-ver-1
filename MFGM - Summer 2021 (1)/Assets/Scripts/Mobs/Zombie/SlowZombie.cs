@@ -6,7 +6,7 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
 {
     public enum States { Idle, Walking, Attacking, InKnockback}
 
-    
+    private float originalRadius;
     private States currentState = States.Idle;
 
     // Start is called before the first frame update
@@ -15,6 +15,7 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
         base.Start();
         if(noticeComponent != null)
             noticeComponent.OnMobEnterRadius += OnMobEnter ;
+        originalRadius = myInfo.NoticeRadius;
     }
 
     private void OnDestroy()
@@ -63,6 +64,11 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
             followTargetComponent.enabled = true;
             velocityRotator.enabled = true;
         }
+        if (currentState == States.Walking)
+            myInfo.NoticeRadius *= 1.5f;
+        else
+            myInfo.NoticeRadius = originalRadius;
+
     }
 
     private void OnMobEnter(GameObject mob)
@@ -85,6 +91,14 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
         MyUtils.Time.SetTimeout(() => {
             myRigidbody.velocity = Vector2.zero;
         }, duration, this);
+
+        float oldRadius = myInfo.NoticeRadius;
+        myInfo.NoticeRadius *= 1.5f;
+        MyUtils.Time.SetTimeout(() => {
+            myInfo.NoticeRadius = oldRadius;
+
+        }, duration, this);
+
     }
 
 
