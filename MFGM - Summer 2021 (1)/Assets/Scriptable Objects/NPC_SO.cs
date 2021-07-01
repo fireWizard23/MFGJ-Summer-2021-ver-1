@@ -11,7 +11,7 @@ public class NPC_SO : MobSO
     [Space]
     public float NoticeRadius = 3f;
     public LayerMask NoticeMask = 1;
-        
+    [Space] public float StopDistance = 0.5f;
 
 
 

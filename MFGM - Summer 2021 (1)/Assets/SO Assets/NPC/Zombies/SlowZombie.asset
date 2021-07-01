@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: SlowZombie
   m_EditorClassIdentifier: 
   GivenHealth: 100
-  MovementSpeed: 1
+  MovementSpeed: 2
   MovementLerpWeight: 0.1
   AttackDamage: 5
   AttackCooldown: 2
+  AttackInteruptionDuration: 0.5
+  knockbackLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   AttackMask:
     serializedVersion: 2
     m_Bits: 1
@@ -24,3 +28,4 @@ MonoBehaviour:
   NoticeMask:
     serializedVersion: 2
     m_Bits: 1
+  StopDistance: 1
