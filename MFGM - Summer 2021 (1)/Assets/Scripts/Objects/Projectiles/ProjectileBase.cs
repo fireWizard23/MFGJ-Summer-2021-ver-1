@@ -35,7 +35,7 @@ public abstract class ProjectileBase : MonoBehaviour, MyClasses.IProjectile, MyC
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         IKnockbackeable knock = collision.GetComponent<IKnockbackeable>();
-        knock?.GetKnockback(direction.normalized, 10);
+        knock?.GetKnockback(direction.normalized, 0.6f);
         DestroySelf();
     }
 
