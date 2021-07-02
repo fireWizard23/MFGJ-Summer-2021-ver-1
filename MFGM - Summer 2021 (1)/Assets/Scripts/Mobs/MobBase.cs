@@ -13,12 +13,15 @@ public abstract class MobBase : MonoBehaviour, IVelocityRotated
     protected VelocityRotator velocityRotator;
     protected NoticeComponent noticeComponent;
 
+    protected float originalNoticeRadius;
+
     protected virtual void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         followTargetComponent = GetComponent<FollowTarget>();
         velocityRotator = GetComponent<VelocityRotator>();
         noticeComponent = GetComponent<NoticeComponent>();
+        originalNoticeRadius = myInfo.NoticeRadius;
     }
 
 

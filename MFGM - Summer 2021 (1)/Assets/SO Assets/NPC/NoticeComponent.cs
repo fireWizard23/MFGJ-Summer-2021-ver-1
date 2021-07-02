@@ -9,9 +9,24 @@ public class NoticeComponent : MonoBehaviour
 
     public event Action<GameObject> OnMobEnterRadius;
 
-    void Update()
+    private const float OriginalMultiplier = 1f;
+    private float NoticeRadiusMultiplier = OriginalMultiplier;
+
+
+    public void SetMultiplier(float multiplier)
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, myInfo.NoticeRadius, Vector3.forward, 1f, myInfo.NoticeMask);
+        NoticeRadiusMultiplier = multiplier;
+    }
+
+    public void SetMultiplier()
+    {
+        NoticeRadiusMultiplier = OriginalMultiplier;
+    }
+    
+    void LateUpdate()
+    {
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, myInfo.NoticeRadius * NoticeRadiusMultiplier, 
+            Vector3.forward, 1f, myInfo.NoticeMask);
         foreach(RaycastHit2D hit in hits)
         {
             OnMobEnterRadius?.Invoke(hit.collider.gameObject);

@@ -9,6 +9,8 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
     
     private States currentState = States.Idle;
 
+    
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -52,17 +54,27 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
 
     private void DoStateLogic()
     {
+        MyUtils.Print(currentState, myRigidbody.velocity, followTargetComponent.target?.name);
         if (currentState == States.InKnockback)
         {
             followTargetComponent.enabled = false;
             velocityRotator.enabled = false;
         }
-
         else
         {
             followTargetComponent.enabled = true;
             velocityRotator.enabled = true;
         }
+
+        if(currentState == States.Walking)
+        {
+            noticeComponent.SetMultiplier(2);
+        }
+        else
+        {
+            noticeComponent.SetMultiplier();
+        }
+
     }
 
     private void OnMobEnter(GameObject mob)

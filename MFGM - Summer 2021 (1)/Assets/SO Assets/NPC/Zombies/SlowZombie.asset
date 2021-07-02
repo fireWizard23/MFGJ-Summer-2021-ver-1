@@ -24,7 +24,7 @@ MonoBehaviour:
   AttackMask:
     serializedVersion: 2
     m_Bits: 1
-  NoticeRadius: 3
+  NoticeRadius: 5
   NoticeMask:
     serializedVersion: 2
     m_Bits: 193
