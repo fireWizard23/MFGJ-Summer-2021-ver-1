@@ -33,9 +33,11 @@ public class FollowTarget : MonoBehaviour
 
             Vector2 targetPos = target.position - transform.position;
             float distance = targetPos.sqrMagnitude;
+            //Distance check
             if(distance > myInfo.NoticeRadius * myInfo.NoticeRadius)
             {
                 target = null;
+                myRigidbody.velocity = Vector2.Lerp(myRigidbody.velocity, Vector2.zero, myInfo.MovementLerpWeight);
                 return;
             }
 

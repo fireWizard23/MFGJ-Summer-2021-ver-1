@@ -9,7 +9,6 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
     
     private States currentState = States.Idle;
 
-    
 
     // Start is called before the first frame update
     protected override void Start()
@@ -54,7 +53,6 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
 
     private void DoStateLogic()
     {
-        MyUtils.Print(currentState, myRigidbody.velocity, followTargetComponent.target?.name);
         if (currentState == States.InKnockback)
         {
             followTargetComponent.enabled = false;
@@ -68,11 +66,11 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
 
         if(currentState == States.Walking)
         {
-            noticeComponent.SetMultiplier(2);
+            NoticeMultiplier = 2f;
         }
         else
         {
-            noticeComponent.SetMultiplier();
+            NoticeMultiplier = 1f;
         }
 
     }
@@ -92,8 +90,8 @@ public class SlowZombie : MobBase, MyClasses.IKnockbackeable
         duration = Mathf.Clamp(duration, 0, 1);
         length = Mathf.Clamp(length, 0, 5);
         currentState = States.InKnockback;
-
-        myRigidbody.AddForce(direction.normalized * length * 10f, ForceMode2D.Impulse);
+        var total = direction.normalized * length * 100f;
+        myRigidbody.AddForce(total, ForceMode2D.Impulse);
         MyUtils.Time.SetTimeout(() => {
             myRigidbody.velocity = Vector2.zero;
         }, duration, this);

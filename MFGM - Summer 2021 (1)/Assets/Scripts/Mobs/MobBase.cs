@@ -7,13 +7,14 @@ public abstract class MobBase : MonoBehaviour, IVelocityRotated
 {
     public virtual Vector2 Velocity { get { return myRigidbody.velocity; } }
     public NPC_SO myInfo;
+    public float NoticeMultiplier = 1f;
+
 
     protected Rigidbody2D myRigidbody;
     protected FollowTarget followTargetComponent;
     protected VelocityRotator velocityRotator;
     protected NoticeComponent noticeComponent;
 
-    protected float originalNoticeRadius;
 
     protected virtual void Start()
     {
@@ -21,7 +22,8 @@ public abstract class MobBase : MonoBehaviour, IVelocityRotated
         followTargetComponent = GetComponent<FollowTarget>();
         velocityRotator = GetComponent<VelocityRotator>();
         noticeComponent = GetComponent<NoticeComponent>();
-        originalNoticeRadius = myInfo.NoticeRadius;
+        myInfo.myMob = this;
+
     }
 
 
